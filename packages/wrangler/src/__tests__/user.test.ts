@@ -1945,14 +1945,15 @@ describe("User", () => {
 			);
 		});
 
-		it("should output the API token from environment variable", async ({
+		it("should output the API token without decoration when stdout is non-interactive", async ({
 			expect,
 		}) => {
+			setIsTTY({ stdin: true, stdout: false });
 			vi.stubEnv("CLOUDFLARE_API_TOKEN", "env-api-token");
 
 			await runWrangler("auth token");
 
-			expect(std.out).toContain("env-api-token");
+			expect(std.out).toBe("env-api-token");
 		});
 
 		it("should error when using global auth key/email without --json", async ({

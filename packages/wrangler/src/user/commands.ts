@@ -3,7 +3,11 @@ import {
 	readUserPreferences,
 	setKeyringPreference,
 } from "@cloudflare/workers-auth/wrangler";
-import { CommandLineArgsError, UserError } from "@cloudflare/workers-utils";
+import {
+	CommandLineArgsError,
+	isNonInteractiveOrCI,
+	UserError,
+} from "@cloudflare/workers-utils";
 import { readConfig } from "../config";
 import { createCommand, createNamespace } from "../core/create-command";
 import { logger } from "../logger";
@@ -284,9 +288,9 @@ export const authTokenCommand = createCommand({
 		status: "stable",
 	},
 	behaviour: {
-		printBanner: (args) => !args.json,
+		printBanner: (args) => !args.json && !isNonInteractiveOrCI(),
 		printConfigWarnings: false,
-		suggestSkillsAfterHandler: (args) => !args.json,
+		suggestSkillsAfterHandler: (args) => !args.json && !isNonInteractiveOrCI(),
 		printActiveProfile: false,
 	},
 	args: {
